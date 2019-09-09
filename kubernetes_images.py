@@ -14,14 +14,12 @@ class repository:
 
 lists = [
     repository('kainonly/pause:3.1', 'k8s.gcr.io/pause:3.1'),
-    repository('kainonly/etcd:3.2.24', 'k8s.gcr.io/etcd:3.2.24'),
-    repository('kainonly/coredns:1.2.6', 'k8s.gcr.io/coredns:1.2.6'),
-    repository('kainonly/kube-apiserver:v1.13.3', 'k8s.gcr.io/kube-apiserver:v1.13.3'),
-    repository('kainonly/kube-controller-manager:v1.13.3', 'k8s.gcr.io/kube-controller-manager:v1.13.3'),
-    repository('kainonly/kube-proxy:v1.13.3', 'k8s.gcr.io/kube-proxy:v1.13.3'),
-    repository('kainonly/kube-scheduler:v1.13.3', 'k8s.gcr.io/kube-scheduler:v1.13.3'),
-    repository('kainonly/flannel:v0.11.0-amd64', 'quay.io/coreos/flannel:v0.11.0-amd64'),
-    repository('kainonly/kubernetes-dashboard-amd64:v1.10.1', 'k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1')
+    repository('kainonly/etcd:3.3.10', 'k8s.gcr.io/etcd:3.3.10'),
+    repository('kainonly/coredns:1.3.1', 'k8s.gcr.io/coredns:1.3.1'),
+    repository('kainonly/kube-apiserver:v1.15.3', 'k8s.gcr.io/kube-apiserver:v1.15.3'),
+    repository('kainonly/kube-controller-manager:v1.15.3', 'k8s.gcr.io/kube-controller-manager:v1.15.3'),
+    repository('kainonly/kube-proxy:v1.15.3', 'k8s.gcr.io/kube-proxy:v1.15.3'),
+    repository('kainonly/kube-scheduler:v1.15.3', 'k8s.gcr.io/kube-scheduler:v1.15.3'),
 ]
 
 client = docker.from_env()
