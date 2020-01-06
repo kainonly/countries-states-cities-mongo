@@ -2,4 +2,7 @@
 
 一些自动部署脚本测试与存档
 
-- kubernetes - k8s国内镜像处理
+- `utils_deploy` 服务部署常用工具集，适用于debian系统，脚本将更新linux内核，安装 `python2/3` 与 `git`
+- `docker_deploy` 适用debian系统的docker服务部署安装
+- `ssh_keeplive` 保持SSH客户端心跳连接
+- `k8s_image` 从国内源拉取Kubernetes需要的镜像组件
