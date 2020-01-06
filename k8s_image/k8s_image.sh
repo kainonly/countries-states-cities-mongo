@@ -12,7 +12,7 @@ declare -A images=(
 )
 
 for origin in ${!images[*]}; do
-  docker pull ${images[$origin]}
-  docker tag ${images[$origin]} ${origin}
-  docker rmi ${images[$origin]}
+  docker_deploy pull ${images[$origin]}
+  docker_deploy tag ${images[$origin]} ${origin}
+  docker_deploy rmi ${images[$origin]}
 done
