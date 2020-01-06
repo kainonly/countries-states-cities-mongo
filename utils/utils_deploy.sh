@@ -10,4 +10,4 @@ sudo DEBIAN_FRONTEND=noninteractive apt -y upgrade
 
 # 安装 python
 
-sudo apt -y install python python-pip python3 python3-pip
+sudo apt -y install python python-pip python3 python3-pip git
