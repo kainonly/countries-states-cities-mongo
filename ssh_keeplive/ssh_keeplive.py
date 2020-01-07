@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 import sys
-from os import path
+import os
 import re
 import subprocess
 
-if len(sys.argv) < 3:
-    exit("Please add operating parameters!")
-
-input_path = sys.argv[1]
-output_path = sys.argv[2]
-
-if path.exists(input_path) != True or output_path == None:
-    exit("File path is incorrect or does not exist!")
-
 try:
+    if len(sys.argv) < 3:
+        exit("Please add operating parameters!")
+
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+
+    if not os.path.exists(input_path) or not output_path:
+        exit("File path is incorrect or does not exist!")
+
     with open(input_path, mode='r') as f:
         content = f.read()
 
@@ -35,9 +35,9 @@ try:
             continue
         raws.append(line_text)
 
-    if exists_interval == False:
+    if not exists_interval:
         raws.append("ClientAliveInterval 15")
-    if exists_count_max == False:
+    if not exists_count_max:
         raws.append("ClientAliveCountMax 45")
 
     with open(output_path, mode='w') as f:
