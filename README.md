@@ -4,6 +4,7 @@
 
 - `utils_deploy` 服务部署常用工具集，适用于debian系统，脚本将更新linux内核，安装 `python2/3` 与 `git`
 - `docker_deploy` 适用debian系统的docker服务部署安装
+- `docker_mirror` Docker镜像设置脚本
 - `ssh_keeplive` 保持SSH客户端心跳连接
 - `webhook_deploy` 网络回调钩子自动部署
 - `k8s_image` 从国内源拉取Kubernetes需要的镜像组件
