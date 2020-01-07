@@ -23,7 +23,7 @@ try:
         with open(daemon_path, mode='w') as f:
             f.write(json.dumps(content))
 
-    subprocess.run(['systemcl', 'restart', 'docker'])
+    subprocess.run(['systemctl', 'restart', 'docker'])
     print('docker mirrors setup successfully!')
 except Exception as error:
     print(error)
