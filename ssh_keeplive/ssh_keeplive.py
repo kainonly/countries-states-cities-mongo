@@ -3,7 +3,6 @@ import sys
 from os import path
 import re
 import subprocess
-import string
 
 if len(sys.argv) < 3:
     exit("Please add operating parameters!")
