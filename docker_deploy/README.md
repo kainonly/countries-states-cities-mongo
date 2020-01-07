@@ -4,7 +4,7 @@
 
 ```shell script
 # 添加权限
-chmod +x ./docker_deploy.sh
+chmod +x ./docker_deploy.py
 # 执行脚本
-./docker_deploy.sh
+./docker_deploy.py
 ```
