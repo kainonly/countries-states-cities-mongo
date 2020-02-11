@@ -35,12 +35,6 @@ try:
     subprocess.run('sudo apt -y install docker-ce docker-ce-cli containerd.io', shell=True)
     # Enable Docker Service
     subprocess.run(['systemctl', 'enable', 'docker'])
-    # Run this command to download the current stable release of Docker Compose
-    subprocess.run('sudo curl -L \
-     "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" \
-     -o /usr/local/bin/docker-compose', shell=True)
-    # Apply executable permissions to the binary
-    subprocess.run('sudo chmod +x /usr/local/bin/docker-compose', shell=True)
 
     file_service = '/lib/systemd/system/docker.service'
     config = Config()
