@@ -15,10 +15,12 @@
     "deploy:dependency": "pip install oss2 requests"
   },
   "deploy": {
-    "accessKeyId": "<accessKeyId>",
-    "accessKeySecret": "<accessKeySecret>",
-    "endpoint": "<endpoint>",
-    "bucket": "<bucket>"
+    "prod": {
+      "accessKeyId": "",
+      "accessKeySecret": "",
+      "endpoint": "",
+      "bucket": ""
+    }
   }
 }
 ```
