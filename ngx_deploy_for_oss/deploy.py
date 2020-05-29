@@ -6,7 +6,7 @@ with open('package.json') as f:
   package = json.loads(f.read())
 
 Project = package['name']
-Deploy = package['deploy']
+Deploy = package['deploy']['prod']
 
 auth = Auth(Deploy['accessKeyId'], Deploy['accessKeySecret'])
 bucket = Bucket(auth, Deploy['endpoint'], Deploy['bucket'])
