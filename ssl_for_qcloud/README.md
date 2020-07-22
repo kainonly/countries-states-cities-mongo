@@ -1,6 +1,6 @@
-## change ssl for qcloud
+## ssl for qcloud
 
-腾讯云SSL证书管理更换同域名证书
+腾讯云SSL证书管理简化
 
 ## 使用
 

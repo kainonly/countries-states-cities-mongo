@@ -1,11 +1,11 @@
 import unittest
 import os
-from change_ssl_for_qcloud import ChangeSSL
+from ssl_for_qcloud import QcloudSSL
 
 
 class MyTestCase(unittest.TestCase):
     def setUp(self) -> None:
-        self.deploy = ChangeSSL(os.environ['qcloud_id'], os.environ['qcloud_key'])
+        self.deploy = QcloudSSL(os.environ['qcloud_id'], os.environ['qcloud_key'])
 
     def test_search(self):
         response = self.deploy.search('*.kainonly.com')
