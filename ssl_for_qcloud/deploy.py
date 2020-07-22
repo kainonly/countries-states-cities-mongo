@@ -4,7 +4,7 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.ssl.v20191205 import ssl_client, models
 
 
-class ChangeSSL:
+class QcloudSSL:
     def __init__(self, id: str, key: str):
         self.client = ssl_client.SslClient(
             credential=credential.Credential(id, key),
