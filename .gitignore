@@ -1,4 +1,4 @@
 /.idea
 /venv
-
+/resource
 /ssh_keeplive/create_config
