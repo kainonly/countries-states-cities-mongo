@@ -23,6 +23,7 @@ func SetValues() (values *common.Values, err error) {
 	return
 }
 
+// UseMongoDB 设置 MongoDB
 func UseMongoDB(values *common.Values) (*mongo.Client, error) {
 	return mongo.Connect(
 		context.TODO(),
@@ -30,6 +31,7 @@ func UseMongoDB(values *common.Values) (*mongo.Client, error) {
 	)
 }
 
+// UseDatabase 指定数据库
 func UseDatabase(client *mongo.Client, values *common.Values) (db *mongo.Database) {
 	return client.Database(values.Database.DbName)
 }
