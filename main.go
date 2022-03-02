@@ -2,6 +2,8 @@ package main
 
 import (
 	"countries-states-cities-mongo/bootstrap"
+	"os"
+	"os/signal"
 )
 
 func main() {
@@ -16,4 +18,8 @@ func main() {
 	if err = app.Run(); err != nil {
 		panic(err)
 	}
+
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt)
+	<-exit
 }
