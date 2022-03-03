@@ -2,8 +2,8 @@ FROM alpine:edge
 
 RUN apk add tzdata
 
-COPY dist /app
+COPY dist /tmp
 
-WORKDIR /app
+WORKDIR /tmp
 
 CMD [ "./main" ]
