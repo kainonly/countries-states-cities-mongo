@@ -2,8 +2,8 @@ FROM alpine:edge
 
 RUN apk add tzdata
 
-COPY dist /app
+COPY dist/event-invoke /
 
-WORKDIR /app
+WORKDIR /
 
-CMD [ "./main" ]
+CMD [ "/event-invoke" ]
