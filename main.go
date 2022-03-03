@@ -1,25 +1,28 @@
 package main
 
 import (
+	"context"
+	"countries-states-cities-mongo/app"
 	"countries-states-cities-mongo/bootstrap"
-	"os"
-	"os/signal"
+	"countries-states-cities-mongo/common"
+	"github.com/tencentyun/scf-go-lib/cloudfunction"
 )
 
-func main() {
-	v, err := bootstrap.SetValues()
-	if err != nil {
-		panic(err)
+func Invoke(ctx context.Context) (err error) {
+	var v *common.Values
+	if v, err = bootstrap.SetValues(); err != nil {
+		return err
 	}
-	app, err := App(v)
-	if err != nil {
-		panic(err)
+	var x *app.App
+	if x, err = App(v); err != nil {
+		return err
 	}
-	if err = app.Run(); err != nil {
-		panic(err)
+	if err = x.Run(ctx); err != nil {
+		return err
 	}
+	return nil
+}
 
-	exit := make(chan os.Signal, 1)
-	signal.Notify(exit, os.Interrupt)
-	<-exit
+func main() {
+	cloudfunction.Start(Invoke)
 }
