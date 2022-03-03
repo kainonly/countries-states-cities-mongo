@@ -8,23 +8,33 @@ package main
 
 import (
 	"countries-states-cities-mongo/app"
+	"countries-states-cities-mongo/app/index"
 	"countries-states-cities-mongo/bootstrap"
 	"countries-states-cities-mongo/common"
+	"github.com/gin-gonic/gin"
 )
 
 // Injectors from wire.go:
 
-func App(value *common.Values) (*app.App, error) {
+func App(value *common.Values) (*gin.Engine, error) {
 	client, err := bootstrap.UseMongoDB(value)
 	if err != nil {
 		return nil, err
 	}
 	database := bootstrap.UseDatabase(client, value)
+	restyClient := bootstrap.UseHttpClient()
 	inject := &common.Inject{
 		Values:      value,
 		MongoClient: client,
 		Db:          database,
+		Client:      restyClient,
 	}
-	appApp := app.New(inject)
-	return appApp, nil
+	service := &index.Service{
+		Inject: inject,
+	}
+	controller := &index.Controller{
+		Service: service,
+	}
+	engine := app.New(value, controller)
+	return engine, nil
 }
