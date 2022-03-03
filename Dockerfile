@@ -1,7 +1,6 @@
 FROM alpine:edge
 
-COPY dist /app
+COPY dist/event-invoke /
 
-WORKDIR /app
 
-CMD [ "./main" ]
+CMD [ "/event-invoke" ]
