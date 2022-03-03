@@ -16,35 +16,38 @@ type App struct {
 	Client *resty.Client
 }
 
-func (x *App) Run() (err error) {
-	ctx := context.Background()
+func (x *App) Run(ctx context.Context) (err error) {
+	var result *mongo.InsertManyResult
 	log.Println("Sync Countries")
-	if err = x.SyncCountries(ctx); err != nil {
+	if result, err = x.SyncCountries(ctx); err != nil {
 		return
 	}
+	log.Println("Insert", len(result.InsertedIDs))
 	log.Println("Sync States")
-	if err = x.SyncStates(ctx); err != nil {
+	if result, err = x.SyncStates(ctx); err != nil {
 		return
 	}
+	log.Println("Insert", len(result.InsertedIDs))
 	log.Println("Sync Cities")
-	if err = x.SyncCities(ctx); err != nil {
+	if result, err = x.SyncCities(ctx); err != nil {
 		return
 	}
+	log.Println("Insert", len(result.InsertedIDs))
 	return
 }
 
-func (x *App) SyncCountries(ctx context.Context) (err error) {
+func (x *App) SyncCountries(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("countries.json"); err != nil {
 		return
 	}
-	var result []map[string]interface{}
-	if err = jsoniter.Unmarshal(res.Body(), &result); err != nil {
+	var body []map[string]interface{}
+	if err = jsoniter.Unmarshal(res.Body(), &body); err != nil {
 		return
 	}
-	data := make([]interface{}, len(result))
-	for k, v := range result {
+	data := make([]interface{}, len(body))
+	for k, v := range body {
 		delete(v, "id")
 		data[k] = v
 	}
@@ -52,7 +55,7 @@ func (x *App) SyncCountries(ctx context.Context) (err error) {
 		Drop(ctx); err != nil {
 		return
 	}
-	if _, err = x.Db.Collection("countries").
+	if result, err = x.Db.Collection("countries").
 		InsertMany(ctx, data); err != nil {
 		return
 	}
@@ -76,18 +79,18 @@ func (x *App) SyncCountries(ctx context.Context) (err error) {
 	return
 }
 
-func (x *App) SyncStates(ctx context.Context) (err error) {
+func (x *App) SyncStates(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("states.json"); err != nil {
 		return
 	}
-	var result []map[string]interface{}
-	if err = jsoniter.Unmarshal(res.Body(), &result); err != nil {
+	var body []map[string]interface{}
+	if err = jsoniter.Unmarshal(res.Body(), &body); err != nil {
 		return
 	}
-	data := make([]interface{}, len(result))
-	for k, v := range result {
+	data := make([]interface{}, len(body))
+	for k, v := range body {
 		delete(v, "id")
 		delete(v, "country_id")
 		data[k] = v
@@ -96,7 +99,7 @@ func (x *App) SyncStates(ctx context.Context) (err error) {
 		Drop(ctx); err != nil {
 		return
 	}
-	if _, err = x.Db.Collection("states").
+	if result, err = x.Db.Collection("states").
 		InsertMany(ctx, data); err != nil {
 		return
 	}
@@ -116,18 +119,18 @@ func (x *App) SyncStates(ctx context.Context) (err error) {
 	return
 }
 
-func (x *App) SyncCities(ctx context.Context) (err error) {
+func (x *App) SyncCities(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("cities.json"); err != nil {
 		return
 	}
-	var result []map[string]interface{}
-	if err = jsoniter.Unmarshal(res.Body(), &result); err != nil {
+	var body []map[string]interface{}
+	if err = jsoniter.Unmarshal(res.Body(), &body); err != nil {
 		return
 	}
-	data := make([]interface{}, len(result))
-	for k, v := range result {
+	data := make([]interface{}, len(body))
+	for k, v := range body {
 		delete(v, "id")
 		delete(v, "country_id")
 		delete(v, "state_id")
@@ -137,7 +140,7 @@ func (x *App) SyncCities(ctx context.Context) (err error) {
 		Drop(ctx); err != nil {
 		return
 	}
-	if _, err = x.Db.Collection("cities").
+	if result, err = x.Db.Collection("cities").
 		InsertMany(ctx, data); err != nil {
 		return
 	}

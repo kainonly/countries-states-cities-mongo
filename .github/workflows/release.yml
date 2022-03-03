@@ -29,7 +29,7 @@ jobs:
       - name: 构建应用
         run: |
           go mod tidy
-          go build -o dist/event-invoke main.go wire_gen.go
+          go build -o dist/main main.go wire_gen.go
         env:
           CGO_ENABLED: 0
           GO111MODULE: on
