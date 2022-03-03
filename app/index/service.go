@@ -1,4 +1,4 @@
-package app
+package index
 
 import (
 	"context"
@@ -8,35 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
-type App struct {
+type Service struct {
 	*common.Inject
-	Client *resty.Client
 }
 
-func (x *App) Run(ctx context.Context) (err error) {
-	var result *mongo.InsertManyResult
-	log.Println("Sync Countries")
-	if result, err = x.SyncCountries(ctx); err != nil {
-		return
-	}
-	log.Println("Insert", len(result.InsertedIDs))
-	log.Println("Sync States")
-	if result, err = x.SyncStates(ctx); err != nil {
-		return
-	}
-	log.Println("Insert", len(result.InsertedIDs))
-	log.Println("Sync Cities")
-	if result, err = x.SyncCities(ctx); err != nil {
-		return
-	}
-	log.Println("Insert", len(result.InsertedIDs))
-	return
-}
-
-func (x *App) SyncCountries(ctx context.Context) (result *mongo.InsertManyResult, err error) {
+func (x *Service) SyncCountries(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("countries.json"); err != nil {
@@ -79,7 +57,7 @@ func (x *App) SyncCountries(ctx context.Context) (result *mongo.InsertManyResult
 	return
 }
 
-func (x *App) SyncStates(ctx context.Context) (result *mongo.InsertManyResult, err error) {
+func (x *Service) SyncStates(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("states.json"); err != nil {
@@ -119,7 +97,7 @@ func (x *App) SyncStates(ctx context.Context) (result *mongo.InsertManyResult, e
 	return
 }
 
-func (x *App) SyncCities(ctx context.Context) (result *mongo.InsertManyResult, err error) {
+func (x *Service) SyncCities(ctx context.Context) (result *mongo.InsertManyResult, err error) {
 	var res *resty.Response
 	if res, err = x.Client.R().SetContext(ctx).
 		Get("cities.json"); err != nil {

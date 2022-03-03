@@ -4,6 +4,7 @@ import (
 	"context"
 	"countries-states-cities-mongo/common"
 	"github.com/caarlos0/env/v6"
+	"github.com/go-resty/resty/v2"
 	"github.com/google/wire"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -12,6 +13,7 @@ import (
 var Provides = wire.NewSet(
 	UseMongoDB,
 	UseDatabase,
+	UseHttpClient,
 )
 
 // SetValues 初始化配置
@@ -34,4 +36,10 @@ func UseMongoDB(values *common.Values) (*mongo.Client, error) {
 // UseDatabase 指定数据库
 func UseDatabase(client *mongo.Client, values *common.Values) (db *mongo.Database) {
 	return client.Database(values.Database.DbName)
+}
+
+// UseHttpClient 创建 HttpClient
+func UseHttpClient() *resty.Client {
+	return resty.New().
+		SetBaseURL(`https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master`)
 }
