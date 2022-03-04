@@ -6,9 +6,9 @@ require (
 	github.com/caarlos0/env/v6 v6.9.1
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.7.7
-	github.com/go-resty/resty/v2 v2.7.0
 	github.com/google/wire v0.5.0
 	github.com/json-iterator/go v1.1.12
+	github.com/panjf2000/ants/v2 v2.4.8
 	github.com/weplanx/go v0.0.1
 	go.mongodb.org/mongo-driver v1.8.3
 	go.uber.org/zap v1.19.1
@@ -36,7 +36,6 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/text v0.3.7 // indirect
