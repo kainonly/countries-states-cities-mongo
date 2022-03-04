@@ -22,12 +22,10 @@ func App(value *common.Values) (*gin.Engine, error) {
 		return nil, err
 	}
 	database := bootstrap.UseDatabase(client, value)
-	restyClient := bootstrap.UseHttpClient()
 	inject := &common.Inject{
 		Values:      value,
 		MongoClient: client,
 		Db:          database,
-		Client:      restyClient,
 	}
 	service := &index.Service{
 		Inject: inject,
