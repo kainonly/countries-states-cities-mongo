@@ -32,7 +32,7 @@ func (x *Service) SyncCountries(ctx context.Context) (err error) {
 	}
 	var resp *http.Response
 	if resp, err = client.Do(req.WithContext(ctx)); err != nil {
-		panic(err)
+		return
 	}
 	defer resp.Body.Close()
 	r := csv.NewReader(resp.Body)
@@ -71,13 +71,13 @@ func (x *Service) SyncCountries(ctx context.Context) (err error) {
 		latitude := float64(0)
 		if record[15] != "" {
 			if latitude, err = strconv.ParseFloat(record[15], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		longitude := float64(0)
 		if record[16] != "" {
 			if longitude, err = strconv.ParseFloat(record[16], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		countries = append(countries, model.Country{
@@ -138,7 +138,7 @@ func (x *Service) SyncStates(ctx context.Context) (err error) {
 	}
 	var resp *http.Response
 	if resp, err = client.Do(req.WithContext(ctx)); err != nil {
-		panic(err)
+		return
 	}
 	defer resp.Body.Close()
 	r := csv.NewReader(resp.Body)
@@ -160,13 +160,13 @@ func (x *Service) SyncStates(ctx context.Context) (err error) {
 		latitude := float64(0)
 		if record[7] != "" {
 			if latitude, err = strconv.ParseFloat(record[7], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		longitude := float64(0)
 		if record[8] != "" {
 			if longitude, err = strconv.ParseFloat(record[8], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		states = append(states, model.State{
@@ -211,7 +211,7 @@ func (x *Service) SyncCities(ctx context.Context) (err error) {
 	}
 	var resp *http.Response
 	if resp, err = client.Do(req.WithContext(ctx)); err != nil {
-		panic(err)
+		return
 	}
 	defer resp.Body.Close()
 	if err = x.Db.Collection("cities").
@@ -253,13 +253,13 @@ func (x *Service) SyncCities(ctx context.Context) (err error) {
 		latitude := float64(0)
 		if record[8] != "" {
 			if latitude, err = strconv.ParseFloat(record[8], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		longitude := float64(0)
 		if record[9] != "" {
 			if longitude, err = strconv.ParseFloat(record[9], 64); err != nil {
-				panic(err)
+				return
 			}
 		}
 		cities = append(cities, model.City{
