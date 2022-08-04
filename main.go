@@ -1,15 +1,16 @@
 package main
 
-import "countries-states-cities-mongo/bootstrap"
+import (
+	"github.com/kainonly/countries-states-cities-mongo/bootstrap"
+	"net/http"
+)
 
 func main() {
-	values, err := bootstrap.SetValues()
+	api, err := bootstrap.NewAPI()
 	if err != nil {
 		panic(err)
 	}
-	app, err := App(values)
-	if err != nil {
-		panic(err)
-	}
-	app.Run(":9000")
+
+	http.HandleFunc("/event-invoke", api.EventInvoke)
+	http.ListenAndServe(api.Values.Address, nil)
 }
