@@ -11,8 +11,10 @@ type Inject struct {
 }
 
 type Values struct {
-	TrustedProxies []string `env:"TRUSTED_PROXIES"`
-	Database       Database `envPrefix:"DATABASE_"`
+	// 监听地址
+	Address string `env:"ADDRESS" envDefault:":9000"`
+	// 数据库
+	Database Database `envPrefix:"DATABASE_"`
 }
 
 type Database struct {

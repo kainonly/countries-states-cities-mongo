@@ -1,11 +1,12 @@
-package index
+package api
 
 import (
 	"context"
-	"countries-states-cities-mongo/common"
-	"countries-states-cities-mongo/model"
 	"encoding/csv"
-	jsoniter "github.com/json-iterator/go"
+	"fmt"
+	"github.com/bytedance/sonic"
+	"github.com/kainonly/countries-states-cities-mongo/common"
+	"github.com/kainonly/countries-states-cities-mongo/model"
 	"github.com/panjf2000/ants/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,13 +18,44 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
-type Service struct {
+type API struct {
 	*common.Inject
 }
 
-func (x *Service) SyncCountries(ctx context.Context) (err error) {
+func (x *API) EventInvoke(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		return
+	}
+
+	fmt.Println("开始同步数据")
+	ctx := req.Context()
+	log.Println("开始同步国家/地区信息")
+	if err := x.SyncCountries(ctx); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Println("同步国家/地区信息已完成")
+	log.Println("开始同步省/州信息")
+	if err := x.SyncStates(ctx); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Println("同步省/州信息已完成")
+	log.Println("开始同步城市信息")
+	if err := x.SyncCities(ctx); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	log.Println("同步城市信息已完成")
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf(`已同步: %s`, time.Now())))
+}
+
+func (x *API) SyncCountries(ctx context.Context) (err error) {
 	client := http.DefaultClient
 	url := baseURL("/csv/countries.csv")
 	var req *http.Request
@@ -65,7 +97,7 @@ func (x *Service) SyncCountries(ctx context.Context) (err error) {
 			vRegex.ReplaceAll([]byte(tzRaw), []byte(`:"$1"$2`)),
 			[]byte(`"$1":`),
 		)
-		if err = jsoniter.Unmarshal(toJSON, &timezones); err != nil {
+		if err = sonic.Unmarshal(toJSON, &timezones); err != nil {
 			return
 		}
 		latitude := float64(0)
@@ -112,15 +144,15 @@ func (x *Service) SyncCountries(ctx context.Context) (err error) {
 	if _, err = x.Db.Collection("countries").Indexes().
 		CreateMany(ctx, []mongo.IndexModel{
 			{
-				Keys:    bson.M{"iso2": 1},
+				Keys:    bson.D{{"iso2", 1}},
 				Options: options.Index().SetName("uk_iso2").SetUnique(true),
 			},
 			{
-				Keys:    bson.M{"iso3": 1},
+				Keys:    bson.D{{"iso3", 1}},
 				Options: options.Index().SetName("uk_iso3").SetUnique(true),
 			},
 			{
-				Keys:    bson.M{"number_code": 1},
+				Keys:    bson.D{{"number_code", 1}},
 				Options: options.Index().SetName("uk_number_code").SetUnique(true),
 			},
 		}); err != nil {
@@ -129,7 +161,7 @@ func (x *Service) SyncCountries(ctx context.Context) (err error) {
 	return
 }
 
-func (x *Service) SyncStates(ctx context.Context) (err error) {
+func (x *API) SyncStates(ctx context.Context) (err error) {
 	client := http.DefaultClient
 	url := baseURL("/csv/states.csv")
 	var req *http.Request
@@ -189,11 +221,11 @@ func (x *Service) SyncStates(ctx context.Context) (err error) {
 	if _, err = x.Db.Collection("states").Indexes().
 		CreateMany(ctx, []mongo.IndexModel{
 			{
-				Keys:    bson.M{"country_code": 1},
+				Keys:    bson.D{{"country_code", 1}},
 				Options: options.Index().SetName("idx_country_code"),
 			},
 			{
-				Keys:    bson.M{"state_code": 1},
+				Keys:    bson.D{{"state_code", 1}},
 				Options: options.Index().SetName("idx_state_code"),
 			},
 		}); err != nil {
@@ -202,7 +234,7 @@ func (x *Service) SyncStates(ctx context.Context) (err error) {
 	return
 }
 
-func (x *Service) SyncCities(ctx context.Context) (err error) {
+func (x *API) SyncCities(ctx context.Context) (err error) {
 	client := http.DefaultClient
 	url := baseURL("/csv/cities.csv")
 	var req *http.Request
@@ -279,19 +311,26 @@ func (x *Service) SyncCities(ctx context.Context) (err error) {
 	if _, err = x.Db.Collection("cities").Indexes().
 		CreateMany(ctx, []mongo.IndexModel{
 			{
-				Keys:    bson.M{"country_code": 1},
+				Keys:    bson.D{{"country_code", 1}},
 				Options: options.Index().SetName("idx_country_code"),
 			},
 			{
-				Keys:    bson.M{"state_code": 1},
+				Keys:    bson.D{{"state_code", 1}},
 				Options: options.Index().SetName("idx_state_code"),
 			},
 			{
-				Keys:    bson.M{"name": 1},
+				Keys:    bson.D{{"name", 1}},
 				Options: options.Index().SetName("idx_name"),
 			},
 		}); err != nil {
 		return
 	}
 	return
+}
+
+func baseURL(path string) string {
+	return fmt.Sprintf(
+		`https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/%s`,
+		path,
+	)
 }
